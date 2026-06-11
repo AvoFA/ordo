@@ -1,0 +1,508 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: light;
+  /* Layered Surface System */
+  --background: #f4f0e6;          /* Layer 0: Page Background */
+  --surface-nav: #ebe5d5;         /* Layer 1: Navigation/Sidebar */
+  --surface: #ebe5d5;             /* Layer 1 */
+  --card: #faf8f4;                /* Layer 2: Content/Card Surface */
+  --surface-elevated: #ffffff;    /* Layer 3: Elevated popups/dialogs */
+  --surface-focused: #e5dfcf;     /* Layer 4: Focused elements */
+  
+  --foreground: #181613;
+  --card-foreground: #181613;
+  --primary: #243a4a;
+  --primary-foreground: #faf8f4;
+  --secondary: #e9e3d5;
+  --secondary-foreground: #181613;
+  --muted: #e3dbcc;
+  --muted-foreground: #635d54;
+  --accent: #e2eaf0;
+  --accent-foreground: #1a3345;
+  --destructive: #cb2e2e;
+  --border: #d5ccb9;              /* Increased contrast border for light mode */
+  --input: #dbd2c2;
+  --ring: #46657d;
+  --ordo-background: var(--background);
+  --ordo-foreground: var(--foreground);
+  
+  /* Unified Learning States (Light Theme) */
+  --state-ready-bg: #e9e3d5;
+  --state-ready-text: #635d54;
+  --state-ready-border: #dbd2c2;
+  
+  --state-learning-bg: #e2eaf0;
+  --state-learning-text: #1a3345;
+  --state-learning-border: #cbdbe6;
+  
+  --state-practicing-bg: #e0f2fe;
+  --state-practicing-text: #0369a1;
+  --state-practicing-border: #bae6fd;
+  
+  --state-review-bg: #fef3c7;
+  --state-review-text: #b45309;
+  --state-review-border: #fde68a;
+  
+  --state-mastered-bg: #dcfce7;
+  --state-mastered-text: #15803d;
+  --state-mastered-border: #bbf7d0;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 16px -2px rgba(36, 58, 74, 0.03), 0 2px 6px -1px rgba(36, 58, 74, 0.015);
+  --shadow-lg: 0 12px 36px rgba(36, 58, 74, 0.03), 0 4px 12px rgba(36, 58, 74, 0.015);
+  --shadow-xl: 0 28px 90px rgba(18, 16, 12, 0.06);
+}
+
+.dark {
+  color-scheme: dark;
+  /* Layered Surface System */
+  --background: #090a0f;          /* Layer 0: Page Background */
+  --surface-nav: #0f1217;         /* Layer 1: Navigation/Sidebar */
+  --surface: #0f1217;             /* Layer 1 */
+  --card: #141820;                /* Layer 2: Content/Card Surface */
+  --surface-elevated: #1b1f27;    /* Layer 3: Elevated popups/dialogs */
+  --surface-focused: #222731;     /* Layer 4: Focused elements */
+  
+  --foreground: #e3e1dc;
+  --card-foreground: #e3e1dc;
+  --primary: #8cb0cc;
+  --primary-foreground: #0d0e11;
+  --secondary: #191e26;
+  --secondary-foreground: #e3e1dc;
+  --muted: #1b2029;
+  --muted-foreground: #8a8880;
+  --accent: #202c38;
+  --accent-foreground: #b8cfdf;
+  --destructive: #dc2626;
+  --border: #222834;              /* Stronger, cleaner borders in dark mode */
+  --input: #1e242d;
+  --ring: #4e6c84;
+  --ordo-background: var(--background);
+  --ordo-foreground: var(--foreground);
+  
+  /* Unified Learning States (Dark Theme) */
+  --state-ready-bg: #191e26;
+  --state-ready-text: #8a8880;
+  --state-ready-border: #2c3543;
+  
+  --state-learning-bg: #202c38;
+  --state-learning-text: #b8cfdf;
+  --state-learning-border: #2d3e4f;
+  
+  --state-practicing-bg: #0c2d42;
+  --state-practicing-text: #7dd3fc;
+  --state-practicing-border: #154868;
+  
+  --state-review-bg: #451a03;
+  --state-review-text: #fcd34d;
+  --state-review-border: #78350f;
+  
+  --state-mastered-bg: #062f1a;
+  --state-mastered-text: #4ade80;
+  --state-mastered-border: #166534;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 16px -2px rgba(0, 0, 0, 0.35), 0 2px 6px -1px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 12px 36px rgba(0, 0, 0, 0.4), 0 4px 12px rgba(0, 0, 0, 0.2);
+  --shadow-xl: 0 28px 90px rgba(0, 0, 0, 0.5);
+}
+
+@theme {
+  --color-background: var(--background);
+  --color-surface-nav: var(--surface-nav);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-surface-focused: var(--surface-focused);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  
+  /* Learning State classes */
+  --color-state-ready-bg: var(--state-ready-bg);
+  --color-state-ready-text: var(--state-ready-text);
+  --color-state-ready-border: var(--state-ready-border);
+  --color-state-learning-bg: var(--state-learning-bg);
+  --color-state-learning-text: var(--state-learning-text);
+  --color-state-learning-border: var(--state-learning-border);
+  --color-state-practicing-bg: var(--state-practicing-bg);
+  --color-state-practicing-text: var(--state-practicing-text);
+  --color-state-practicing-border: var(--state-practicing-border);
+  --color-state-review-bg: var(--state-review-bg);
+  --color-state-review-text: var(--state-review-text);
+  --color-state-review-border: var(--state-review-border);
+  --color-state-mastered-bg: var(--state-mastered-bg);
+  --color-state-mastered-text: var(--state-mastered-text);
+  --color-state-mastered-border: var(--state-mastered-border);
+
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-xl: var(--shadow-xl);
+
+  /* Typography Scale */
+  --font-size-display: 2rem;
+  --font-size-page-title: 1.5rem;
+  --font-size-section-title: 1.15rem;
+  --font-size-body: 0.9375rem;
+  --font-size-meta: 0.8125rem;
+  --font-size-caption: 0.75rem;
+}
+
+body {
+  background: var(--ordo-background);
+  color: var(--ordo-foreground);
+  margin: 0;
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+a,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+/* ============================================
+   Ordo Prose — Knowledge Document Renderer
+   Applied via .ordo-prose wrapper class.
+   Uses standard HTML attributes (class=) since
+   content is injected via dangerouslySetInnerHTML.
+============================================ */
+
+.ordo-prose {
+  color: var(--foreground);
+  line-height: 1.8;
+  font-size: 0.9375rem;
+  max-width: 68ch;
+}
+
+.ordo-prose h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  color: var(--foreground);
+  letter-spacing: -0.02em;
+}
+
+.ordo-prose h2 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.4;
+  margin-top: 1.75rem;
+  margin-bottom: 0.6rem;
+  color: var(--foreground);
+  letter-spacing: -0.01em;
+}
+
+.ordo-prose h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.5;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: var(--foreground);
+}
+
+.ordo-prose p {
+  margin-top: 0;
+  margin-bottom: 0.6rem;
+}
+
+.ordo-prose .ordo-spacer {
+  height: 0.5rem;
+}
+
+.ordo-prose strong {
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.ordo-prose em {
+  font-style: italic;
+  color: var(--foreground);
+}
+
+.ordo-prose a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.15s ease;
+}
+
+.ordo-prose a:hover {
+  border-bottom-color: var(--primary);
+}
+
+.ordo-prose code {
+  font-family: "Fira Code", "Cascadia Code", "JetBrains Mono", "Menlo", "Consolas", monospace;
+  font-size: 0.82em;
+  background: var(--secondary);
+  color: var(--primary);
+  padding: 0.15em 0.45em;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+}
+
+.ordo-prose pre {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  margin: 1.25rem 0;
+  overflow-x: auto;
+}
+
+.ordo-prose pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.82rem;
+  color: var(--foreground);
+  white-space: pre;
+}
+
+.ordo-prose blockquote {
+  border-left: 3px solid var(--primary);
+  margin: 1.25rem 0;
+  padding: 0.5rem 0 0.5rem 1.1rem;
+  font-style: italic;
+  color: var(--muted-foreground);
+  background: transparent;
+}
+
+.ordo-prose ul {
+  list-style-type: disc;
+  list-style-position: outside;
+  padding-left: 2rem;
+  margin: 0.5rem 0;
+}
+
+.ordo-prose ol {
+  list-style-type: decimal;
+  list-style-position: outside;
+  padding-left: 2rem;
+  margin: 0.5rem 0;
+}
+
+.ordo-prose li {
+  display: list-item;
+  list-style-type: inherit;
+  margin: 0.2rem 0;
+  line-height: 1.7;
+}
+
+.ordo-prose li p {
+  margin: 0;
+  display: inline;
+}
+
+.ordo-prose .ordo-checklist-item {
+  list-style: none;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin: 0.3rem 0;
+}
+
+.ordo-prose .ordo-checklist-item input[type="checkbox"] {
+  margin-top: 0.25rem;
+  flex-shrink: 0;
+  accent-color: var(--primary);
+}
+
+.ordo-prose .ordo-checklist-done span {
+  text-decoration: line-through;
+  color: var(--muted-foreground);
+}
+
+.ordo-prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  margin: 1rem 0;
+  display: block;
+}
+
+.ordo-prose hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 1.75rem 0;
+}
+
+/* ============================================
+   Tiptap Editor / ProseMirror Styles
+============================================ */
+.ProseMirror {
+  outline: none;
+  min-height: 480px;
+  line-height: 1.8;
+  font-size: 0.9375rem;
+}
+
+.ProseMirror p.is-editor-empty:first-child::before {
+  color: var(--muted-foreground);
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+/* Custom Table style in Tiptap */
+.ProseMirror table {
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  overflow: hidden;
+  width: 100%;
+}
+
+.ProseMirror th,
+.ProseMirror td {
+  border: 1px solid rgba(120, 120, 120, 0.15);
+  box-sizing: border-box;
+  min-width: 1em;
+  padding: 0.5rem 1rem;
+  position: relative;
+  vertical-align: top;
+  text-align: left;
+}
+
+.ProseMirror th {
+  background-color: rgba(120, 120, 120, 0.05);
+  font-weight: bold;
+}
+
+.ProseMirror .selectedCell:after {
+  background: rgba(200, 200, 255, 0.4);
+  content: "";
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 2;
+}
+
+/* Task lists in Tiptap */
+.ProseMirror ul {
+  list-style-type: disc;
+  list-style-position: outside;
+  padding-left: 2rem;
+  margin: 0.5rem 0;
+}
+
+.ProseMirror ol {
+  list-style-type: decimal;
+  list-style-position: outside;
+  padding-left: 2rem;
+  margin: 0.5rem 0;
+}
+
+.ProseMirror li {
+  display: list-item;
+  list-style-type: inherit;
+  margin: 0.2rem 0;
+  line-height: 1.7;
+}
+
+.ProseMirror li p {
+  margin: 0;
+  display: inline;
+}
+
+.ProseMirror ul[data-type="taskList"] {
+  list-style: none;
+  padding: 0;
+}
+
+.ProseMirror ul[data-type="taskList"] li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin: 0.3rem 0;
+}
+
+.ProseMirror ul[data-type="taskList"] li > label {
+  flex-shrink: 0;
+  margin-top: 0.25rem;
+  user-select: none;
+}
+
+.ProseMirror ul[data-type="taskList"] li > label input[type="checkbox"] {
+  cursor: pointer;
+  accent-color: var(--primary);
+  border-radius: 4px;
+  width: 14px;
+  height: 14px;
+}
+
+.ProseMirror ul[data-type="taskList"] li > div {
+  flex: 1;
+}
+
+.ProseMirror ul[data-type="taskList"] li[data-checked="true"] > div {
+  text-decoration: line-through;
+  color: var(--muted-foreground);
+}
+
+@keyframes brief-highlight {
+  0%, 100% {
+    background-color: transparent;
+  }
+  20%, 80% {
+    background-color: color-mix(in srgb, var(--primary) 15%, transparent);
+    border-color: var(--primary);
+  }
+}
+
+.animate-brief-highlight {
+  animation: brief-highlight 3s ease-in-out;
+}
+
+@keyframes wave-pulse {
+  0%, 100% {
+    transform: scaleY(0.25);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+.animate-wave-pulse {
+  animation: wave-pulse 1s ease-in-out infinite;
+  transform-origin: bottom;
+}
+
+
