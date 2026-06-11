@@ -1,0 +1,18 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:16
+    container_name: ordo-postgres
+    restart: "no"
+    environment:
+      POSTGRES_USER: ordo
+      POSTGRES_PASSWORD: ordo
+      POSTGRES_DB: ordo_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - ordo-postgres-data:/var/lib/postgresql/data
+
+volumes:
+  ordo-postgres-data:

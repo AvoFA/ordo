@@ -1,0 +1,308 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id                 String              @id @default(cuid())
+  email              String              @unique
+  name               String?
+  passwordHash       String?
+  emailVerified      DateTime?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  knowledgeDocuments KnowledgeDocument[]
+  learningPaths      LearningPath[]
+  inboxItems         LearningInboxItem[]
+  topicProgress      TopicProgress[]
+  sessions           LearningSession[]
+  practiceTasks      PracticeTask[]
+  resources          Resource[]
+  practiceAttempts   PracticeAttempt[]
+
+  @@map("users")
+}
+
+model LearningPath {
+  id          String            @id @default(cuid())
+  ownerId     String
+  slug        String
+  title       String
+  description String?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  owner       User              @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  sessions    LearningSession[]
+  topics      Topic[]
+
+  @@unique([ownerId, slug])
+  @@index([ownerId])
+  @@map("learning_paths")
+}
+
+model Topic {
+  id                 String              @id @default(cuid())
+  pathId             String
+  parentId           String?
+  title              String
+  description        String?
+  order              Int                 @default(0)
+  depth              Int                 @default(0)
+  status             TopicStatus         @default(NOT_STARTED)
+  estimatedMinutes   Int?
+  nextStep           String?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  knowledgeDocuments KnowledgeDocument[]
+  sessions           LearningSession[]
+  practiceTasks      PracticeTask[]
+  progressRecords    TopicProgress[]
+  inboxItems         LearningInboxItem[]
+  resources          Resource[]
+  parent             Topic?              @relation("TopicTree", fields: [parentId], references: [id])
+  children           Topic[]             @relation("TopicTree")
+  path               LearningPath        @relation(fields: [pathId], references: [id], onDelete: Cascade)
+
+  @@index([pathId])
+  @@index([parentId])
+  @@map("topics")
+}
+
+model TopicProgress {
+  id          String               @id @default(cuid())
+  userId      String
+  topicId     String
+  state       TopicCompletionState @default(IN_PROGRESS)
+  completedAt DateTime?
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+  topic       Topic                @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  user        User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, topicId])
+  @@index([userId])
+  @@index([topicId])
+  @@map("topic_progress")
+}
+
+model LearningSession {
+  id              String                @id @default(cuid())
+  userId          String
+  pathId          String
+  topicId         String?
+  status          LearningSessionStatus @default(ACTIVE)
+  startedAt       DateTime              @default(now())
+  pausedAt        DateTime?
+  finishedAt      DateTime?
+  durationMinutes Int                   @default(0)
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+  path            LearningPath          @relation(fields: [pathId], references: [id], onDelete: Cascade)
+  topic           Topic?                @relation(fields: [topicId], references: [id])
+  user            User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([pathId])
+  @@index([topicId])
+  @@map("learning_sessions")
+}
+
+model KnowledgeDocument {
+  id          String                     @id @default(cuid())
+  userId      String
+  topicId     String
+  title       String?
+  content     String
+  reviewLater Boolean                    @default(false)
+  createdAt   DateTime                   @default(now())
+  updatedAt   DateTime                   @updatedAt
+  topic       Topic                      @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  user        User                       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  versions    KnowledgeDocumentVersion[]
+  attachments DocumentAttachment[]
+
+  @@index([userId])
+  @@index([topicId])
+  @@map("knowledge_documents")
+}
+
+model KnowledgeDocumentVersion {
+  id         String            @id @default(cuid())
+  documentId String
+  content    String
+  createdAt  DateTime          @default(now())
+  document   KnowledgeDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@index([documentId])
+  @@map("knowledge_document_versions")
+}
+
+model DocumentAttachment {
+  id         String            @id @default(cuid())
+  documentId String
+  fileName   String?
+  mimeType   String
+  base64Data String
+  createdAt  DateTime          @default(now())
+  document   KnowledgeDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@index([documentId])
+  @@map("document_attachments")
+}
+
+model PracticeTask {
+  id               String                 @id @default(cuid())
+  userId           String
+  topicId          String
+  title            String
+  description      String?
+  status           PracticeTaskStatus     @default(TODO)
+  difficulty       PracticeTaskDifficulty @default(FOUNDATION)
+  estimatedMinutes Int?
+  createdAt        DateTime               @default(now())
+  updatedAt        DateTime               @updatedAt
+  attempts         PracticeAttempt[]
+  topic            Topic                  @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  user             User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([topicId])
+  @@map("practice_tasks")
+}
+
+model PracticeAttempt {
+  id         String                @id @default(cuid())
+  taskId     String
+  userId     String
+  result     PracticeAttemptResult
+  reflection String?
+  createdAt  DateTime              @default(now())
+  task       PracticeTask          @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  user       User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([taskId])
+  @@index([userId])
+  @@map("practice_attempts")
+}
+
+model Resource {
+  id          String         @id @default(cuid())
+  userId      String
+  topicId     String?
+  title       String
+  source      ResourceSource @default(URL)
+  url         String?
+  content     String?
+  description String?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  type        ResourceType   @default(WEBSITE)
+  file        ResourceFile?
+  topic       Topic?         @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([topicId])
+  @@map("resources")
+}
+
+model ResourceFile {
+  id         String   @id @default(cuid())
+  resourceId String   @unique
+  fileName   String
+  mimeType   String
+  sizeBytes  Int
+  storageKey String?
+  publicUrl  String?
+  createdAt  DateTime @default(now())
+  resource   Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+
+  @@map("resource_files")
+}
+
+model LearningInboxItem {
+  id          String          @id @default(cuid())
+  userId      String
+  topicId     String?
+  title       String
+  source      ResourceSource  @default(URL)
+  type        ResourceType    @default(WEBSITE)
+  url         String?
+  description String?
+  fileName    String?
+  mimeType    String?
+  sizeBytes   Int?
+  storageKey  String?
+  status      InboxItemStatus @default(CAPTURED)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  topic       Topic?          @relation(fields: [topicId], references: [id], onDelete: SetNull)
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([topicId])
+  @@map("learning_inbox_items")
+}
+
+enum ResourceSource {
+  URL
+  MANUAL
+  FILE
+}
+
+enum InboxItemStatus {
+  CAPTURED
+  ASSIGNED
+  DISCARDED
+}
+
+enum TopicStatus {
+  NOT_STARTED
+  LEARNING
+  COMPLETED
+  REVIEW_LATER
+}
+
+enum TopicCompletionState {
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum LearningSessionStatus {
+  ACTIVE
+  PAUSED
+  COMPLETED
+  CANCELLED
+}
+
+enum PracticeTaskStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+}
+
+enum PracticeTaskDifficulty {
+  FOUNDATION
+  INTERMEDIATE
+  APPLIED
+}
+
+enum PracticeAttemptResult {
+  SUCCESS
+  PARTIAL
+  FAILED
+}
+
+enum ResourceType {
+  ARTICLE
+  VIDEO
+  BOOK
+  WEBSITE
+  PDF
+  DOCX
+  PPTX
+  IMAGE
+}
